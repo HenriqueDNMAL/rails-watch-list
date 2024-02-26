@@ -1,26 +1,53 @@
-<h1><%= @list.name %></h1>
+<h1 class="text-center m-5"><strong><%= @list.name %></strong></h1>
 
-<ul>
-  <% @list.movies.each do |movie| %>
-    <li>
-      <% bookmark = Bookmark.find_by(list: @list, movie: movie) %>
-      <%= image_tag movie.poster_url, width: 140 %>
-      <br>
-      <strong>Title:</strong> <%= movie.title %><br>
-      <strong>Overview:</strong> <%= movie.overview %><br>
-      <strong>Rating:</strong> <%= movie.rating %><br>
-      <strong>Comment:</strong> <%= bookmark.comment %><br>
-      <%= button_to "Delete this bookmark",
-      bookmark_path(bookmark),
-      method: :delete,
-      data: { confirm: "Are you sure?" },
-      class: "btn btn-primary"
-      %>
-    </li><br>
+<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+<% @list.movies.each do |movie| %>
+  <% bookmark = Bookmark.find_by(list: @list, movie: movie) %>
+  <div class="mb-5">
+    <div class="card shadow-sm bg-white">
+      <%= image_tag movie.poster_url, class:"bd-placeholder-img card-img-top" %>
+      <div class="card-body">
+        <h2><strong><%= movie.title %></strong></h2>
+        <p class="card-text"><strong><%= movie.overview %></strong></p>
+        <div class="d-flex justify-content-between align-items-center">
+          <div class="btn-group">
+            <%= button_to bookmark_path(bookmark), method: :delete, data: { confirm: "Are you sure?" }, class: "btn bg-transparent" do %><i class="fa-solid fa-trash"></i><% end %>
+          </div>
+          <small class="text-muted"><strong><%= movie.rating %></strong></small>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>
+</div>
+
+<form class="card shadow-sm bg-white">
+<h2 class="m-3">Add bookmark</h2>
+  <div class="m-3">
+    <%= simple_form_for [@list, @bookmark] do |f| %>
+      <%= f.association :movie, collection: Movie.all, prompt: 'Select a Movie' %>
+      <%= f.input :comment %>
+      <%= f.button :submit, 'Create Bookmark', class: "btn btn-primary mb-3" %>
+    <% end %>
+  </div>
+</form>
+
+<div class="card mt-3" style="width: 18rem;">
+  <div class="card-header">
+    Reviews
+  </div>
+  <ul class="list-group list-group-flush">
+  <% @list.reviews.each do |review| %>
+    <li class="list-group-item"><strong>Rating:</strong> <%= review.rating %></li>
+    <li class="list-group-item"><strong>Content:</strong> <%= review.content %></li>
+    <%= link_to review_path(review), data: {turbo_method: :delete, turbo_confirm: "Are you sure?"}, class: "btn bg-transparent" do %><i class="fa-solid fa-trash"></i><% end %>
   <% end %>
-</ul>
+  </ul>
+</div>
 
-<%= link_to "Back to lists", lists_path, class: "btn btn-primary col-2 mt-3" %>
+
+
+<%= link_to "Back to lists", lists_path, class: "btn btn-primary col-2 mt-3 mb-3" %>
 <br>
-<%= link_to "Add a bookmark", new_list_bookmark_path(@list), class: "btn btn-primary col-2 mt-3" %>
-<%= button_to "Delete list", @list, method: :delete, class: "btn btn-primary col-4 mt-3" %>
+<%= link_to "Add a review", new_list_review_path(@list), class:"btn btn-primary col-2 mb-3" %>
+<%= button_to "Delete list", @list, method: :delete, class: "btn btn-danger col-4 mb-3" %>

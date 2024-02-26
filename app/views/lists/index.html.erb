@@ -1,6 +1,11 @@
-<ul>
-<% @lists.each do |list| %>
-<li><%= link_to list.name, list %></li>
-<% end %>
-</ul>
+<div class="card mt-3 mb-3" style="width: 18rem;">
+  <div class="card-header">
+    Lists
+  </div>
+  <ul class="list-group list-group-flush">
+  <% @lists.each do |list| %>
+    <li class="list-group-item"><strong><%= link_to list.name, list %></strong></li>
+  <% end %>
+  </ul>
+</div>
 <%= link_to "New list", new_list_path, class: "btn btn-primary col-2" %>
