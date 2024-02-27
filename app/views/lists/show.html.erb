@@ -9,11 +9,12 @@
       <div class="card-body">
         <h2><strong><%= movie.title %></strong></h2>
         <p class="card-text"><strong><%= movie.overview %></strong></p>
+        <p class="card-text"><strong>Comment: <%= bookmark.comment %></strong></p>
         <div class="d-flex justify-content-between align-items-center">
           <div class="btn-group">
             <%= button_to bookmark_path(bookmark), method: :delete, data: { confirm: "Are you sure?" }, class: "btn bg-transparent" do %><i class="fa-solid fa-trash"></i><% end %>
           </div>
-          <small class="text-muted"><strong><%= movie.rating %></strong></small>
+          <small class="text-muted"><strong>Rating: <%= movie.rating %></strong></small>
         </div>
       </div>
     </div>
@@ -21,7 +22,7 @@
 <% end %>
 </div>
 
-<form class="card shadow-sm bg-white">
+<div class="card shadow-sm bg-white">
 <h2 class="m-3">Add bookmark</h2>
   <div class="m-3">
     <%= simple_form_for [@list, @bookmark] do |f| %>
@@ -30,7 +31,7 @@
       <%= f.button :submit, 'Create Bookmark', class: "btn btn-primary mb-3" %>
     <% end %>
   </div>
-</form>
+</div>
 
 <div class="card mt-3" style="width: 18rem;">
   <div class="card-header">
