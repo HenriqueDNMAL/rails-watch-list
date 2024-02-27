@@ -1,11 +1,40 @@
-<div class="card mt-3 mb-3" style="width: 18rem;">
-  <div class="card-header">
-    Lists
+<div class="navbar navbar-expand-sm navbar-light navbar-lewagon">
+  <div class="container-fluid">
+    <div class="navbar-brand">
+      <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" class="bi bi-film" viewBox="0 0 16 16">
+        <path d="M0 1a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H1a1 1 0 0 1-1-1zm4 0v6h8V1zm8 8H4v6h8zM1 1v2h2V1zm2 3H1v2h2zM1 7v2h2V7zm2 3H1v2h2zm-2 3v2h2v-2zM15 1h-2v2h2zm-2 3v2h2V4zm2 3h-2v2h2zm-2 3v2h2v-2zm2 3h-2v2h2z"/>
+      </svg>
+    </div>
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <div class="navbar-nav me-auto">
+          <div class="nav-item active">
+            <%= link_to "New list", new_list_path, class: "btn btn-primary" %>
+          </div>
+      </div>
+    </div>
   </div>
-  <ul class="list-group list-group-flush">
-  <% @lists.each do |list| %>
-    <li class="list-group-item"><strong><%= link_to list.name, list %></strong></li>
-  <% end %>
-  </ul>
 </div>
-<%= link_to "New list", new_list_path, class: "btn btn-primary col-2" %>
+
+<div class="container w-50">
+  <div class="mt-3 mb-3">
+    <h1 class="text-center m-5">Lists</h1>
+    <div class="d-flex flex-column gap-4">
+      <% @lists.each do |list| %>
+          <% if list.photo.attached? %>
+            <div class="card-category bg-dark text-white" style="background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('<%= cl_image_path list.photo.key, crop: :fit %>')">
+              <h2 class="card-title"><strong><%= link_to list.name, list, class:"card-title text-decoration-none" %></strong></h2>
+            </div>
+          <% else %>
+            <div class="card-category bg-dark text-white" style="height: 180px">
+              <h2 class="card-title"><strong><%= link_to list.name, list, class:"card-title text-decoration-none" %></strong></h2>
+            </div>
+          <% end %>
+      <% end %>
+    </div>
+  </div>
+</div>

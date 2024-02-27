@@ -3,6 +3,7 @@
     <h2 class="m-3">Add list</h2>
     <%= simple_form_for @list do |f| %>
       <%= f.input :name %>
+      <%= f.input :photo, as: :file %>
       <%= f.button :submit, class: "btn btn-primary mb-3" %>
     <% end %>
   </div>

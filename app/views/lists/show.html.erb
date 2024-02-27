@@ -1,15 +1,28 @@
-<h1 class="text-center m-5"><strong><%= @list.name %></strong></h1>
+<% if @list.photo.attached? %>
+  <div class="banner mb-5" style="background-image: linear-gradient(rgba(0,0,0,0.4),rgba(0,0,0,0.4)), url('<%= cl_image_path @list.photo.key %>');">
+    <div class="container">
+      <h1><strong><%= @list.name %></strong></h1>
+    </div>
+  </div>
+<% else %>
+  <div class="banner bg-dark text-white mb-5" style="padding: 150px 0;">
+    <div class="container">
+      <h1><strong><%= @list.name %></strong></h1>
+    </div>
+  </div>
+<% end %>
 
 <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
 <% @list.movies.each do |movie| %>
   <% bookmark = Bookmark.find_by(list: @list, movie: movie) %>
-  <div class="mb-5">
+  <div class="mb-4">
     <div class="card shadow-sm bg-white">
       <%= image_tag movie.poster_url, class:"bd-placeholder-img card-img-top" %>
       <div class="card-body">
         <h2><strong><%= movie.title %></strong></h2>
         <p class="card-text"><strong><%= movie.overview %></strong></p>
-        <p class="card-text"><strong>Comment: <%= bookmark.comment %></strong></p>
+        <hr>
+        <p class="card-text"><strong><i class="fa-solid fa-quote-left" style="font-size: 24px; width: 40px"></i><%= bookmark.comment %></strong></p>
         <div class="d-flex justify-content-between align-items-center">
           <div class="btn-group">
             <%= button_to bookmark_path(bookmark), method: :delete, data: { confirm: "Are you sure?" }, class: "btn bg-transparent" do %><i class="fa-solid fa-trash"></i><% end %>
@@ -22,7 +35,9 @@
 <% end %>
 </div>
 
-<div class="card shadow-sm bg-white">
+<hr>
+
+<div class="card shadow-sm bg-white m-5">
 <h2 class="m-3">Add bookmark</h2>
   <div class="m-3">
     <%= simple_form_for [@list, @bookmark] do |f| %>
@@ -33,22 +48,46 @@
   </div>
 </div>
 
-<div class="card mt-3" style="width: 18rem;">
-  <div class="card-header">
-    Reviews
+<hr>
+
+<div class="container d-flex justify-content-evenly">
+  <div class="card mt-3 w-50">
+    <div class="card-header">
+      Reviews
+    </div>
+    <ul class="list-group list-group-flush">
+    <% @list.reviews.each do |review| %>
+      <li class="list-group-item d-flex justify-content-between align-items-start">
+        <div class="ms-2 me-auto">
+          <div class="fw-bold mb-2">Content:</div>
+          <%= review.content %>
+        </div>
+        <span class="badge bg-primary"><% review.rating.times do %> <i class="fa-solid fa-star"></i> <% end %> </span>
+        <%= link_to review_path(review), data: {turbo_method: :delete, turbo_confirm: "Are you sure?"}, class: "btn bg-transparent" do %><i class="fa-solid fa-trash"></i><% end %>
+      </li>
+    <% end %>
+    </ul>
   </div>
-  <ul class="list-group list-group-flush">
-  <% @list.reviews.each do |review| %>
-    <li class="list-group-item"><strong>Rating:</strong> <%= review.rating %></li>
-    <li class="list-group-item"><strong>Content:</strong> <%= review.content %></li>
-    <%= link_to review_path(review), data: {turbo_method: :delete, turbo_confirm: "Are you sure?"}, class: "btn bg-transparent" do %><i class="fa-solid fa-trash"></i><% end %>
-  <% end %>
-  </ul>
+
+  <div class="card shadow-sm bg-white m-5 w-50">
+  <h2 class="m-3">Add review</h2>
+    <div class="m-3">
+      <%= simple_form_for [@list, @review] do |f| %>
+        <%= f.input :rating, collection: (1..5).to_a, label: "Rate your experience", input_html: {data: {controller: "star-rating"}} %>
+        <%= f.input :content %>
+        <%= f.submit "Submit review", class: "btn btn-primary" %>
+      <% end %>
+    </div>
+  </div>
 </div>
 
+<hr>
 
-
-<%= link_to "Back to lists", lists_path, class: "btn btn-primary col-2 mt-3 mb-3" %>
-<br>
-<%= link_to "Add a review", new_list_review_path(@list), class:"btn btn-primary col-2 mb-3" %>
-<%= button_to "Delete list", @list, method: :delete, class: "btn btn-danger col-4 mb-3" %>
+<div class="container d-flex flex-column">
+  <div class="row justify-content-center">
+      <%= link_to "Back to lists", lists_path, class: "btn btn-primary col-3 mt-3 mb-3" %>
+  </div>
+  <div class="row justify-content-center">
+      <%= link_to "Delete list", list_path(@list), data: {turbo_method: :delete, turbo_confirm: "Are you sure?"}, class: "btn btn-danger col-3  mb-3" %>
+  </div>
+</div>
